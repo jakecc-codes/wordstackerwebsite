@@ -1,0 +1,20 @@
+body {
+    background-color: lightgoldenrodyellow;
+}
+table.layout {
+    width: 100%;
+}
+.pfpInfo {
+    display: flex;
+}
+.pfpImg {
+    width: 300px;
+    height: 300px;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+.iconLeft {
+    width: 2%;
+    height: 2%;
+    float: right;
+}
