@@ -13,6 +13,19 @@ li, .block-item {
     box-shadow: 2px 2px 2px darkslateblue;
     z-index: 3;
 }
+.block-item:hover {
+    outline: thin solid white;
+    box-shadow: 1px 1px 2px darkslateblue;
+}
+
+a, a:hover, a:visited {
+    border:none;
+    outline:none;
+    text-decoration:none;
+    color:inherit;
+    -webkit-tap-highlight-color: white;
+    color: darkslateblue;
+}
 
 .block-stack {
     margin-top: 250px;
@@ -20,23 +33,27 @@ li, .block-item {
 }
 
 .groundTile {
-    box-shadow: 0px 0px 0px darkslateblue;
-    margin-bottom: 0px;
-    padding: 0px 0px;
-
-    background-color: #e1c3c3;
-    padding-bottom: 300px;
-    transform:translateY(-40px);
+    background-color: #e0cdbd;
+    height: 300px;
     z-index: 1;
 }
 .shadowTile {
-    display: flex;
-    justify-content: center;
+    position: absolute;
+    background-color: #c9b3ad;
+    margin-left: 46%;
+    width: 140px;
+    padding-bottom: 10px;
+    transform:translateY(-300px);
+    border-radius: 400px;
+    z-index: 2;
+}
 
-    background-color: #c0a4a4;
-    width: 44%;
-    height: 10px;
-    transform:translate(107%, -30px);
+.shadowTitle {
+    position: absolute;
+    color: #c9b3ad;
+    padding-bottom: 10px;
+    transform:translate(1%, -200px);
+    border-radius: 400px;
     z-index: 2;
 }
 

@@ -1,4 +1,8 @@
 window.addEventListener('DOMContentLoaded', (ev) => {
+    const WOBBLELIMIT = 400;
+    const WOBBLESPEED = 1;
+    const FALLSPEED = 0.75;
+
     const MODESWITCHER = document.getElementById("modeswitcher");
     const TEXTBOX = document.getElementById("messagesender");
     const TEXTBOXPROMPT = document.getElementById("messagesenderprompt");
@@ -35,6 +39,14 @@ window.addEventListener('DOMContentLoaded', (ev) => {
         }
         return textSolution;
     }
+    function copyLink(url) {
+        navigator.clipboard.writeText(url).then(() => {
+            alert("Link Copied to Clipboard: " + url);
+        }).catch(err => {
+            console.error('Failed to copy link: ', err);
+        });
+    }
+
 
     function onMessageSent(tag, text) {}
 
@@ -58,7 +70,7 @@ window.addEventListener('DOMContentLoaded', (ev) => {
 
         d1.classList.add('flex-width');
         d1.id = "block-" + messageCount;
-        a1.href = "pages/profile.html";
+        a1.href = "#" +  d1.id;
         d2.classList.add('block-item');
         d2.setAttribute('tag', tag);
         d2.setAttribute('text', text);
@@ -67,6 +79,7 @@ window.addEventListener('DOMContentLoaded', (ev) => {
         } else {
             d2.innerHTML = `<small><em>${tag}:</em></small><br>${text}`;
         }
+        d2.addEventListener('click', () => copyLink(a1.href));
 
         BLOCKSTACK.insertBefore(d1, BLOCKSTACK.firstChild);
         d1.appendChild(a1);
@@ -77,16 +90,16 @@ window.addEventListener('DOMContentLoaded', (ev) => {
             { marginTop: '-1000px' },
             { marginTop: '0px' }
         ], {
-            duration: 0.75 * 1000, // Add settings for this value
+            duration: FALLSPEED * 1000, // Add settings for this value
             iterations: 1
         }).play();
 
         d2.animate([ // Clamp this value lol
-            { marginLeft: (messageCount/400) + 'px'},
-            { marginLeft: -(messageCount/400) + 'px'},
-            { marginLeft: (messageCount/400) + 'px'},
+            { marginLeft: (messageCount/WOBBLELIMIT) + 'px'},
+            { marginLeft: -(messageCount/WOBBLELIMIT) + 'px'},
+            { marginLeft: (messageCount/WOBBLELIMIT) + 'px'},
         ], {
-            duration: 1 * 1000,
+            duration: WOBBLESPEED * 1000,
             iterations: Infinity
         }).play();
 
