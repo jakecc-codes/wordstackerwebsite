@@ -25,6 +25,13 @@ window.addEventListener('DOMContentLoaded', (ev) => {
             }
         }
     }
+    function formatText(textSolution) {
+        textSolution = textSolution + " | ";
+        if (textSolution[0] != '@') {
+            textSolution = '@' + textSolution;
+        }
+        return textSolution;
+    }
 
     function onModeChange(ev) {
         if (this.value != 0) {
@@ -53,6 +60,13 @@ window.addEventListener('DOMContentLoaded', (ev) => {
                 break;
         }
     }
+    function onTextBoxInputBefore(ev) {
+        if (textSperator) {
+            TEXTBOX.textContent = formatText(this.textContent);
+            TEXTBOXPROMPT.textContent = this.textContent + "Type a Word/Phrase";
+            moveCaret(window, TEXTBOX.textContent.length);// premove
+        }
+    }
     function onTextBoxInput(ev) {
         if (messageSent) {
             messageSent = false;
@@ -61,14 +75,7 @@ window.addEventListener('DOMContentLoaded', (ev) => {
             }
         } else if (textSperator) {
             textSperator = false;
-            var textSolution = this.textContent;
-            textSolution = textSolution + "|"
-            if (textSolution[0] != '@') {
-                textSolution = "@" + textSolution;
-            }
-            TEXTBOXPROMPT.textContent = textSolution + "Send a Message";
-            this.textContent = textSolution;
-            moveCaret(window, textSolution.length);
+            moveCaret(window, TEXTBOX.textContent.length);// postmove
         }
         if (TEXTBOXPROMPT) {
             TEXTBOXPROMPT.style.visibility = this.textContent != "" ? "hidden" : "visible";
@@ -80,4 +87,5 @@ window.addEventListener('DOMContentLoaded', (ev) => {
     TEXTBOX?.addEventListener('keydown', onTextBoxKeyDown);
     TEXTBOX?.addEventListener('keyup', onTextBoxKeyUp);
     TEXTBOX?.addEventListener('input', onTextBoxInput);
+    TEXTBOX?.addEventListener('beforeinput', onTextBoxInputBefore);
 });
