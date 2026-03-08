@@ -15,6 +15,11 @@ function onMessageSent(tag, text) {
     const element = document.getElementById("blockstack");
     if (element) {
         localStorage.setItem("localBlockStack", element.innerHTML);
+        const messageCount = element.childElementCount;
+        if (messageCount > 5000) {
+            // Turn on dark mode
+            console.log("darkmode!");
+        }
     }
 }
 

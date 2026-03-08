@@ -1,7 +1,7 @@
 window.addEventListener('DOMContentLoaded', (ev) => {
     const WOBBLELIMIT = 400;
     const WOBBLESPEED = 1;
-    const FALLSPEED = 0.75;
+    const FALLSPEED = 0.75; // TODO: Space is at 5000 blocks, blocks fall slower and darkmode
 
     const MODESWITCHER = document.getElementById("modeswitcher");
     const TEXTBOX = document.getElementById("messagesender");
@@ -79,7 +79,7 @@ window.addEventListener('DOMContentLoaded', (ev) => {
             sfx.play();
             blockObj.animate([
                 {backgroundColor: 'lightyellow'},
-                {backgroundColor: `${blockObj.style.backgroundColor}`}
+                {backgroundColor: 'initial'}
             ], {
                 duration: (intensity*10+1) * 600,
                 iterations: 1

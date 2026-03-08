@@ -1,2 +1,4 @@
 
-function onMessageSent(tag, text) {}
+function onMessageSent(tag, text) {
+    // Database Management...
+}
