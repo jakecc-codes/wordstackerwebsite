@@ -3,11 +3,10 @@
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width init-scale=1.0"/>
-        <meta name="description" content="Word Stacker is an online time capsule where you can share important words/pharses to mark an important historic event/memorial part in history."/>
+        <meta name="description" content="Word Stacker is an online time capsule where users can share important words/pharses to mark an important historic event/memorial part in history."/>
         <meta name="keywords" content="word, stacker, wordstacker, stacker, JakeCCz, HTML, CSS, JavaScript"/>
         <title>Word Stacker</title>
         <link href="css/index.css" rel="stylesheet" type="text/css">
-        <script src="scripts/index.js" defer></script>
     </head>
     
     <!--JakeCCz, 5/3/2026-->
@@ -53,7 +52,7 @@
             </div>
             <div class="groundTile"></div>
             <div class="shadowTile"></div>
-            <h2 class="shadowTitle">Congrats you've made it to the bottom!<br><a href="#" style="text-decoration: underline;;">Back to top</a></a></h2>
+            <h2 class="shadowHint">Congrats you've made it to the bottom!<br><a href="#" style="text-decoration: underline;;">Back to top</a></a></h2>
 
         </main>
 
@@ -63,7 +62,7 @@
                     <div class="flex-width">
                         <div class="message-sender-box">
                             <div class="flex-height" style="height: 100%;">
-                                <a href="index.html" class="message-sender-box-item"><svg class="message-sender-box-icon" viewport="0 0 24 24">
+                                <a href="#" class="message-sender-box-item"><svg class="message-sender-box-icon" viewport="0 0 24 24">
                                     <path d="M20.1314,3.16091 C18.9598,1.98933 17.0603,1.98933 15.8888,3.16091 L15.1817,3.86801 L20.1314,8.81776 L20.8385,8.11065 C22.0101,6.93908 22.0101,5.03959 20.8385,3.86801 L20.1314,3.16091 Z M18.7172,10.232 L13.7674,5.28223 L4.67645,14.3732 C4.47766,14.572 4.33874,14.8227 4.27553,15.0966 L3.24747,19.5515 C3.08111,20.2724 3.72721,20.9183 4.44792,20.7519 L8.90283,19.7239 C9.17676,19.6607 9.42741,19.5218 9.6262,19.323 L18.7172,10.232 Z"></path>
                                 </svg></a>
                                 <div class="message-sender-box-item" style="display:flex; width:100%;">
@@ -74,9 +73,11 @@
                         </div>
                     </div>
                 </div>
+                <div id="blockstackcounter" class="default-text-color" style="transform: translate(10px, -30px);">Blocks Stacked: 0</div>
             </div>
         </footer>
 
         <script src="scripts/shared.js"></script>
+        <script src="scripts/index.js"></script>
     </body>
 </html>

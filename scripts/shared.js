@@ -7,11 +7,16 @@ window.addEventListener('DOMContentLoaded', (ev) => {
     const TEXTBOX = document.getElementById("messagesender");
     const TEXTBOXPROMPT = document.getElementById("messagesenderprompt");
     const BLOCKSTACK = document.getElementById("blockstack");
+    const BLOCKSTACKCOUNTER = document.getElementById("blockstackcounter");
     var messageSent = false;
     var shiftHeld = false;
     var textSperator = false;
     var messageCount = 0;
     var lastMessage;
+
+    function clamp(v, m, M) {
+        return v < m ? m : v > M ? M : v;
+    }
 
     function moveCaret(win, charCount) {
         var sel, range;
@@ -47,8 +52,45 @@ window.addEventListener('DOMContentLoaded', (ev) => {
         });
     }
 
+    function onMessageAnimate(blockObj, intensity = 0) {
+        const randAudioValue = Math.floor(Math.random() * 10) % 5 +1;
+        // Wobble Animation
+        blockObj.animate([ // Clamp this value lol
+            { marginLeft: (messageCount/WOBBLELIMIT) + 'px'},
+            { marginLeft: -(messageCount/WOBBLELIMIT) + 'px'},
+            { marginLeft: (messageCount/WOBBLELIMIT) + 'px'},
+        ], {
+            duration: WOBBLESPEED * 1000,
+            iterations: Infinity
+        }).play();
 
-    function onMessageSent(tag, text) {}
+        // Falling Animation
+        var fall = blockObj.animate([
+            { marginTop: '-500px' },
+            { marginTop: '0px' }
+        ], {
+            duration: (FALLSPEED - intensity*0.5) * 1000, // Add settings for this value
+            iterations: 1
+        }); // TODO: Animate Dust Particles and Stack Size
+        fall.play();
+        fall.finished.then(() => {
+            var sfx = new Audio("../audio/sfx_blockfall" + randAudioValue + ".mp3");
+            sfx.volume = clamp(intensity + 0.2, 0.2, 1);
+            sfx.play();
+            blockObj.animate([
+                {backgroundColor: 'lightyellow'},
+                {backgroundColor: `${blockObj.style.backgroundColor}`}
+            ], {
+                duration: (intensity*10+1) * 600,
+                iterations: 1
+            }).play();
+            if (BLOCKSTACKCOUNTER) {
+                BLOCKSTACKCOUNTER.textContent = "Blocks Stacked: " + messageCount;
+            }
+        });
+    }
+
+    //function onMessageSent(tag, text) {}
 
     function onMessageSentBefore(textEnquiry) {
         if (textEnquiry == "") {
@@ -89,22 +131,7 @@ window.addEventListener('DOMContentLoaded', (ev) => {
         a1.appendChild(d2);
 
         //animations
-        d2.animate([
-            { marginTop: '-1000px' },
-            { marginTop: '0px' }
-        ], {
-            duration: FALLSPEED * 1000, // Add settings for this value
-            iterations: 1
-        }).play(); // TODO: Animate Dust Particles and Stack Size
-
-        d2.animate([ // Clamp this value lol
-            { marginLeft: (messageCount/WOBBLELIMIT) + 'px'},
-            { marginLeft: -(messageCount/WOBBLELIMIT) + 'px'},
-            { marginLeft: (messageCount/WOBBLELIMIT) + 'px'},
-        ], {
-            duration: WOBBLESPEED * 1000,
-            iterations: Infinity
-        }).play();
+        onMessageAnimate(d2, clamp(text.length * 0.01, 0, 1));
 
         // random consts
         messageCount = BLOCKSTACK.childElementCount;

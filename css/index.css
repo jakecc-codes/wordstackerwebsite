@@ -48,9 +48,9 @@ a, a:hover, a:visited {
     z-index: 2;
 }
 
-.shadowTitle {
+.shadowHint {
     position: absolute;
-    color: #c9b3ad;
+    color: #a5918a;
     padding-bottom: 10px;
     transform:translate(1%, -200px);
     border-radius: 400px;
