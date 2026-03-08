@@ -86,6 +86,7 @@ window.addEventListener('DOMContentLoaded', (ev) => {
             }).play();
             if (BLOCKSTACKCOUNTER) {
                 BLOCKSTACKCOUNTER.textContent = "Blocks Stacked: " + messageCount;
+                BLOCKSTACKCOUNTER.style.visibility = "visible";
             }
         });
     }

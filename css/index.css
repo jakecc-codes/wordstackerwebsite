@@ -51,9 +51,12 @@ a, a:hover, a:visited {
 .shadowHint {
     position: absolute;
     color: #a5918a;
-    padding-bottom: 10px;
     transform:translate(1%, -200px);
-    border-radius: 400px;
+    z-index: 2;
+}
+.shadowHint2 {
+    float: right;
+    transform:translateY(-160px);
     z-index: 2;
 }
 
@@ -169,4 +172,8 @@ a, a:hover, a:visited {
 
 .render-infront {
     z-index: 5;
+}
+
+#blockstackcounter {
+    visibility: hidden;
 }

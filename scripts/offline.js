@@ -1,7 +1,15 @@
-const blockStackLoad = document.getElementById("blockstack");
-if (blockStackLoad) {
-    blockStackLoad.innerHTML = localStorage.getItem("localBlockStack");
-}
+window.addEventListener('DOMContentLoaded', (ev) => {
+    const blockStackLoad = document.getElementById("blockstack");
+    const blockStackClear = document.getElementById("blockstackclear");
+    if (blockStackLoad) {
+        blockStackLoad.innerHTML = localStorage.getItem("localBlockStack");
+    }
+    
+    function onClearBlockStack() {
+        localStorage.removeItem("localBlockStack");
+    }
+    blockStackClear?.addEventListener('click', onClearBlockStack);
+});
 
 function onMessageSent(tag, text) {
     const element = document.getElementById("blockstack");
