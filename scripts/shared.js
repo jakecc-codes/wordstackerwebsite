@@ -118,6 +118,35 @@ window.addEventListener('DOMContentLoaded', (ev) => {
         });
     }
 
+    function _BlockCreate(tag, text, requestDate) {
+        const d1 = document.createElement('div');
+        const a1 = document.createElement('a');
+        const d2 = document.createElement('div');
+
+        d1.classList.add('flex-width');
+        d1.id = "block-" + messageCount;
+        a1.href = "#" +  d1.id;
+        a1.title = requestDate;
+        d2.classList.add('block-item');
+        d2.setAttribute('tag', tag);
+        d2.setAttribute('text', text);
+        d2.setAttribute('time', requestDate);
+        if (lastMessage?.getAttribute('tag') == tag) {
+            d2.innerHTML = text;
+        } else {
+            d2.innerHTML = `<small><em>${tag}:</em></small><br>${text}`;
+        }
+        d2.addEventListener('click', () => copyLink(a1.href));
+
+        BSTXCONTAINER.insertBefore(d1, BSTXCONTAINER.firstChild);
+        d1.appendChild(a1);
+        a1.appendChild(d2);
+
+        //animations
+        _onBlockAnimate(d2, clamp(text.length * 0.01, 0, 1));
+        lastMessage = d2;
+    }
+
     //function onMessageSent(tag, text) {}
 
     /**
@@ -146,32 +175,7 @@ window.addEventListener('DOMContentLoaded', (ev) => {
             return false;
         }
         if (document.dispatchEvent(new CustomEvent('blockcreate', {detail: { tag: tag, textHTML: text, rawHTMLString: textEnquiry, dateSent: requestDate, parent: BSTXCONTAINER }, cancelable: true}))) {
-            const d1 = document.createElement('div');
-            const a1 = document.createElement('a');
-            const d2 = document.createElement('div');
-
-            d1.classList.add('flex-width');
-            d1.id = "block-" + messageCount;
-            a1.href = "#" +  d1.id;
-            a1.title = requestDate;
-            d2.classList.add('block-item');
-            d2.setAttribute('tag', tag);
-            d2.setAttribute('text', text);
-            d2.setAttribute('time', requestDate);
-            if (lastMessage?.getAttribute('tag') == tag) {
-                d2.innerHTML = text;
-            } else {
-                d2.innerHTML = `<small><em>${tag}:</em></small><br>${text}`;
-            }
-            d2.addEventListener('click', () => copyLink(a1.href));
-
-            BSTXCONTAINER.insertBefore(d1, BSTXCONTAINER.firstChild);
-            d1.appendChild(a1);
-            a1.appendChild(d2);
-
-            //animations
-            _onBlockAnimate(d2, clamp(text.length * 0.01, 0, 1));
-            lastMessage = d2;
+            _BlockCreate(tag, text, requestDate);
         }
 
         // random consts
@@ -283,4 +287,8 @@ window.addEventListener('DOMContentLoaded', (ev) => {
     BSTXSENDER?.addEventListener('beforeinput', onTextBoxInputBefore, {passive: true});
     document.addEventListener('keydown', onTextBoxKeyDown, {passive: true});
     document.addEventListener('keyup', onTextBoxKeyUp, {passive: true});
+    document.addEventListener('sudoblockcreate', (ev) => {
+        _BlockCreate(ev.detail.tag, ev.detail.text, ev.detail.requestDate);
+        messageCount = BSTXCONTAINER.childElementCount;
+    }, {passive: true});
 });

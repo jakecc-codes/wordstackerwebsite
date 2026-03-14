@@ -184,6 +184,6 @@ a, a:hover, a:visited {
     z-index: 5;
 }
 
-#blockstackcount {
+#blockstackcount, .render-hidden {
     visibility: hidden;
 }
