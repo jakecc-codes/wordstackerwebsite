@@ -5,39 +5,81 @@ const bstxPrompt = document.getElementById("blockstackinputprompt");
 const popupOpen = document.getElementById("popupopen");
 const popupClose = document.getElementById("popupclose");
 let leaderboardTag = localStorage.getItem("leaderboardTag") ?? "@anonymous";
+let upsertTimeoutID = undefined;
+let rankPos = undefined;
 if (blockStackLoad) {
     blockStackLoad.innerHTML = localStorage.getItem("localBlockStack");
 }
 if (bstxPrompt) {
     bstxPrompt.textContent = leaderboardTag + " | Type a Word/Phrase"; // TODO: make helper function... eventually...
 }
+
+/**
+ * Converts 1, 2 and 3 to 1st, 2nd and 3rd.
+ * @param {number} x
+ * @returns {string} 
+ */
+function toOrdinal(x) {
+    const ones = x % 10;
+    const tens = Math.floor(x / 10) % 10;
+    let str = x.toString();
+    if (tens == 1) { return str + 'th'; }
+    switch(ones) {
+        case 1:
+            str += 'st';
+            break;
+        case 2:
+            str += 'nd';
+            break;
+        case 3:
+            str += 'rd';
+            break;
+        default:
+            str += 'th';
+            break;
+    }
+    switch(ones) {
+        case 1:
+            str += " &#128081;";
+            break;
+        case 2:
+            str += " &#129352;";
+            break;
+        case 3:
+            str += " &#129353;";
+            break;
+    }
+    return str;
+}
+/**
+ * Converts 1, 2 and 3 to first, second and third.
+ * @param {number} x
+ * @returns {string} 
+ */
+function toOrdinalName(x) {
+    const title = ["", "first", "second", "third"];
+    return title[x] || "";
+}
+
 async function _LoadLeaderboard() {
     const leaderboard = document.getElementById("sololeaderboard");
     const userboard = document.getElementById("userboard");
-    const { data, error } = await supabaseInstance.from('blockstacks_solo_leaderboard').select().order('blockstackcount', {ascending: false});
+    const entryCap = 29;
+    const { data, error } = await supabaseInstance.from('blockstacks_solo_leaderboard').select().order('blockstackcount', {ascending: false}).limit(Math.max(entryCap, (rankPos ?? 999)));
     if (error) {
         console.error('Error loading leaderboard:', error);
     } else {
-        let rankPos = -1;
         if (leaderboard) {
-            const entryCap = 29;
             let entries = [`<col width="20%"/><col width="60%"/><col width="20%"/><tr><th>TAG</th><th>LASTQUOTE</th><th>STACK</th></tr>`];
+            rankPos = undefined;
             for (let i=0; i<data.length; i++) {
                 const entry = data[i];
                 if (entry.tag == leaderboardTag) { rankPos = i; }
-                if (i > entryCap) { if(rankPos != -1) { break; } continue; }
-                const rank = i+1;
+                if (i > entryCap) { if(rankPos) { break; } continue; }
+                const rank = toOrdinalName(i+1);
                 let rankTitle = ``;
-                switch(rank) { // TODO: This should be a helper function
-                    case 1:
-                        rankTitle = ` class="firstplace"`;
-                        break;
-                    case 2:
-                        rankTitle = ` class="secondplace"`;
-                        break;
-                    case 3:
-                        rankTitle = ` class="thirdplace"`;
-                        break;
+                if (rank) {
+                    rankTitle = ` class="${rank}place"`;
                 }
                 entries.push(`<tr${rankTitle}><td>${entry.tag}</td><td>"${entry.quote}"</td><td>${entry.blockstackcount}</td><td>`);
             }
@@ -45,30 +87,15 @@ async function _LoadLeaderboard() {
         }
         if (userboard) {
             let userEntry = `<col width="20%"/><col width="60%"/><col width="20%"/><tr><td>${leaderboardTag}</td><td>...</td><td>...</td></tr>`;
-            if (rankPos != -1) {
+            if (rankPos != undefined) {
                 const userData = data[rankPos];
-                let rankText = `${++rankPos}`;
-                switch (rankText.at(-1)) { // TODO: Make this a helper function
-                    case '1':
-                        rankText += `${rankText.at(-2)}${rankText.at(-1)}` == '11' ? 'th' : rankPos === 1 ? 'st &#128081;' : 'st';
-                        break;
-                    case '2':
-                        rankText += `${rankText.at(-2)}${rankText.at(-1)}` == '12' ? 'th' : rankPos === 2 ? 'nd &#129352;' : 'nd';
-                        break;
-                    case '3':
-                        rankText += `${rankText.at(-2)}${rankText.at(-1)}` == '13' ? 'th' : rankPos === 3 ? 'rd &#129353;' : 'rd';
-                        break;
-                    default:
-                        rankText += 'th';
-                        break;
-                }
-                userEntry = `<col width="20%"/><col width="60%"/><col width="20%"/><tr><td colspan="3"><strong>You are placed ${rankText}</strong></td></tr><tr><td>${leaderboardTag}</td><td>"${userData.quote}"</td><td>${userData.blockstackcount}</td></tr>`;
+                userEntry = `<col width="20%"/><col width="60%"/><col width="20%"/><tr><td colspan="3"><strong>You are placed ${toOrdinal(rankPos+1)}</strong></td></tr><tr><td>${leaderboardTag}</td><td>"${userData.quote}"</td><td>${userData.blockstackcount}</td></tr>`;
             }
             userboard.innerHTML = userEntry;
         }
     }
 }
-_LoadLeaderboard();
+_LoadLeaderboard(); // should return true or false but ight
 
 window.addEventListener('DOMContentLoaded', (ev) => {
     function onBlockStackClear(ev) {
@@ -85,20 +112,25 @@ window.addEventListener('DOMContentLoaded', (ev) => {
         localStorage.setItem("localBlockStack", blockStack.innerHTML);
         const messageCount = blockStack.childElementCount;
         const newBlockCount = messageCount + 1;
-        if (messageCount > 10500) {
+        if (newBlockCount > 10500) {
             // Turn on dark mode
             console.log("darkmode!");
         }
-        if (messageCount < 1) {
+        if (newBlockCount == 1) {
             leaderboardTag = ev.detail.tag;
             localStorage.setItem("leaderboardTag", leaderboardTag);
-            _LoadLeaderboard();
         }
 
-        const { error } = await supabaseInstance.rpc('upsert_bstx_leaderboard_solo', {bstxtag: leaderboardTag, bstxcount: newBlockCount, bstxquote: ev.detail.textHTML});
-        if (error) {
-            console.error('Error inserting:', error);
-        }
+        clearTimeout(upsertTimeoutID);
+        upsertTimeoutID = setTimeout(async function() {
+            const { error } = await supabaseInstance.rpc('upsert_bstx_leaderboard_solo', {bstxtag: leaderboardTag, bstxcount: newBlockCount, bstxquote: ev.detail.textHTML});
+            if (error) {
+                console.error('Error inserting:', error);
+            } else {
+                _LoadLeaderboard();
+                console.log("Successfully: Updated solo leaderboard!");
+            }
+        }, 1080);
     }
 
     function onPopupOpen(ev) {
@@ -128,7 +160,6 @@ window.addEventListener('DOMContentLoaded', (ev) => {
         animation.finished.then(() => {
             popupClose.style.top = '100%';
             popupOpen.focus();
-            _LoadLeaderboard();
         });
     }
     blockStackClear?.addEventListener('click', onBlockStackClear, {passive: true});
