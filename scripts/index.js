@@ -17,14 +17,14 @@ async function loadBlockStack() {
         for (let i=0; i<blockstackLength; i++) {
             const x = data[i];
             const prevTag = data[i - 1]?.tag;
-            const showTag = x.tag !== prevTag ? `<small>${x.tag}</small><br>` : '';
+            const showTag = x.tag !== prevTag ? `<br><small><em class="tag-style">${x.tag}</em></small>` : '';
             const timeYDate = new Date(x.created_at).toLocaleString();
 
             blocks.push(`
                 <div id="block-${i}" class="flex-width">
                     <a href="#block-${i}" title="${timeYDate}">
                         <div class="block-item wobble-item" tag="${x.tag}" text="${x.text}" time="${timeYDate}">
-                            ${showTag}${x.text}
+                            ${x.text}${showTag}
                         </div>
                     </a>
                 </div>`

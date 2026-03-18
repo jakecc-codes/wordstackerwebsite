@@ -6,9 +6,7 @@
     --highlight-block-colour: white;
     --highlight-panel-colour: gray;
     --texthint-colour: #BBB2A5;
-    --ground: #ffd8bc;
-    --shadow: #e6c0a4;
-    --shadowTEXT: #cda98e;
+    --tag-colour: #cda98e;
 }
 
 body {
@@ -42,14 +40,14 @@ a, a:hover, a:visited {
 }
 
 .groundTile {
-    background-color: var(--ground);
-    border-radius: 40px;
+    background-color: color-mix(in srgb, var(--bg-colour) 10%, #ffd8bc 90%);
+    border-radius: 60px;
     height: 300px;
     z-index: 1;
 }
 .shadowTile {
     position: absolute;
-    background-color: var(--shadow);
+    background-color: color-mix(in srgb, var(--accent-colour) 20%, #e6c0a4 80%);
     margin-left: 46%;
     width: 140px;
     padding-bottom: 9px;
@@ -60,7 +58,7 @@ a, a:hover, a:visited {
 
 .shadowHint {
     position: absolute;
-    color: var(--shadowTEXT);
+    color: color-mix(in srgb, var(--bg-colour) 20%, #ba9980 80%);
     transform:translate(1%, -200px);
     z-index: 2;
 }
@@ -98,6 +96,10 @@ a, a:hover, a:visited {
 
 .default-text-color {
     color: var(--accent-colour);
+    user-select:none;
+}
+.tag-style {
+    color: color-mix(in srgb, var(--accent-colour) 40%, var(--tag-colour) 60%);
     user-select:none;
 }
 

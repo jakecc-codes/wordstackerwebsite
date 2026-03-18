@@ -89,10 +89,10 @@ window.addEventListener('DOMContentLoaded', (ev) => {
      */
     function formatText(textSolution) {
         const prevSolution = BSTXSENDERPROMPT?.textContent.split('|')[0].split(' ')[0];
-        if (prevSolution !== "@anonymous") {
+        if (prevSolution !== "@ANONYMOUS" && textSolution.indexOf('@') === -1) {
             textSolution = prevSolution + " | " + textSolution + " ";
         } else {
-            textSolution = textSolution + " | ";
+            textSolution = textSolution.toUpperCase() + " | ";
         }
         if (textSolution.lastIndexOf('@', textSolution.indexOf('|')) === -1) {
             textSolution = '@' + textSolution;
@@ -175,7 +175,7 @@ window.addEventListener('DOMContentLoaded', (ev) => {
         if (lastMessage?.getAttribute('tag') === tag) {
             d2.innerHTML = text;
         } else {
-            d2.innerHTML = `<small><em>${tag}:</em></small><br>${text}`;
+            d2.innerHTML = `${text}<br><small><em class="tag-style">${tag}</em></small>`;
         }
         d2.addEventListener('click', () => copyLink(a1.href));
 
@@ -204,7 +204,7 @@ window.addEventListener('DOMContentLoaded', (ev) => {
         const atSymbIndex = textEnquiry.indexOf('@');
         const textEndIndex = textEnquiry.lastIndexOf("<div><br></div>"); //TODO: Fix bug where random divs appear, randomly formatting text
         const textFormat = textEnquiry.lastIndexOf('|') === -1 ? [BSTXSENDERPROMPT.textContent.split('|')[0].split(' ')[0], textEnquiry.slice(0, textEndIndex)] : textEnquiry.slice(atSymbIndex, textEndIndex).split('|');
-        let tag = textFormat[0].split("&nbsp;")[0].split(" ")[0];
+        let tag = (textFormat[0].split("&nbsp;")[0].split(" ")[0]).toUpperCase();
         let text = textFormat.at(-1);
         if(text.indexOf("<div>") === 0 && text.indexOf("</div>") === text.length-6) {
             text = text.slice(text.indexOf("<div>")+5, text.lastIndexOf("</div>"));

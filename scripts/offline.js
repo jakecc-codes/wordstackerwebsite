@@ -4,7 +4,7 @@ const blockStackClear = document.getElementById("blockstackclear");
 const bstxPrompt = document.getElementById("blockstackinputprompt");
 const popupOpen = document.getElementById("popupopen");
 const popupClose = document.getElementById("popupclose");
-let leaderboardTag = localStorage.getItem("leaderboardTag") ?? "@anonymous";
+let leaderboardTag = localStorage.getItem("leaderboardTag") ?? "@ANONYMOUS";
 let upsertTimeoutID = undefined;
 let rankPos = undefined;
 if (blockStackLoad) {
