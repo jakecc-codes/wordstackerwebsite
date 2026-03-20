@@ -175,7 +175,7 @@ window.addEventListener('DOMContentLoaded', (ev) => {
         if (lastMessage?.getAttribute('tag') === tag) {
             d2.innerHTML = text;
         } else {
-            d2.innerHTML = `${text}<br><small><em class="tag-style">${tag}</em></small>`;
+            d2.innerHTML = `${text}<small><em class="tag-style">${tag}</em></small>`;
         }
         d2.addEventListener('click', () => copyLink(a1.href));
 
@@ -202,18 +202,13 @@ window.addEventListener('DOMContentLoaded', (ev) => {
             return false;
         }
         const atSymbIndex = textEnquiry.indexOf('@');
-        const textEndIndex = textEnquiry.lastIndexOf("<div><br></div>"); //TODO: Fix bug where random divs appear, randomly formatting text
+        const textEndIndex = textEnquiry.length; //TODO: Fix bug where random divs appear, randomly formatting text
         const textFormat = textEnquiry.lastIndexOf('|') === -1 ? [BSTXSENDERPROMPT.textContent.split('|')[0].split(' ')[0], textEnquiry.slice(0, textEndIndex)] : textEnquiry.slice(atSymbIndex, textEndIndex).split('|');
         let tag = (textFormat[0].split("&nbsp;")[0].split(" ")[0]).toUpperCase();
-        let text = textFormat.at(-1);
-        if(text.indexOf("<div>") === 0 && text.indexOf("</div>") === text.length-6) {
-            text = text.slice(text.indexOf("<div>")+5, text.lastIndexOf("</div>"));
-        } else if (text.indexOf("<div>") === -1 && text.indexOf("</div>") === text.length-6) {
-            text = text.slice(0, text.lastIndexOf("</div>"));
-        }
+        let text = textFormat.at(-1).split("<div>").join('').split("</div>").join('');
 
 
-        if (!BSTXCONTAINER || lastMessage?.getAttribute('text') === text || text === "<br>" || text === "") {
+        if (!BSTXCONTAINER || lastMessage?.getAttribute('text') === text || text.split("<br>").join('') === "") {
             return false;
         }
         if (document.dispatchEvent(new CustomEvent('blockcreate', {detail: { tag: tag, textHTML: text, rawHTMLString: textEnquiry, dateSent: requestDate, parent: BSTXCONTAINER }, cancelable: true}))) {
