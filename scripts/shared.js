@@ -141,7 +141,7 @@ window.addEventListener('DOMContentLoaded', (ev) => {
         fall.play();
 
         fall.finished.then(() => {
-            let sfx = new Audio("/wordstackerwebsite/audio/sfx_blockfall" + randAudioValue + ".mp3");
+            let sfx = new Audio("/audio/sfx_blockfall" + randAudioValue + ".mp3");
             sfx.volume = clamp(intensity + 0.2, 0.2, 1);
             sfx.play();
             blockObj.animate([
