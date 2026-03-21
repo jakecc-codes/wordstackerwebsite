@@ -145,7 +145,8 @@ window.addEventListener('DOMContentLoaded', (ev) => {
                 {backgroundColor: 'var(--highlight-block-colour)'}
             ], {
                 duration: (intensity*5+1) * 600,
-                direction: "reverse"
+                direction: "reverse",
+                easing: "ease-in"
             }).play();
             blockObj.animate([ // Clamp this value lol
                 {marginLeft: (5*r) + "px"},
@@ -167,9 +168,17 @@ window.addEventListener('DOMContentLoaded', (ev) => {
                     {opacity: '20%'}
                 ], {
                     duration: (intensity*5+1) * 1200,
-                    easing: "ease-in-out",
+                    easing: "ease-out",
                     direction: "reverse"
                 });
+                bstxBgHighlightAnim.play();
+                BSTXBGHIGHLIGHT.animate([
+                    {width: '0%', marginLeft: '50%'}
+                ], {
+                    duration: 200,
+                    easing: "ease-in",
+                    direction: "reverse"
+                }).play();
                 bstxBgHighlightAnim.play();
             }
             
